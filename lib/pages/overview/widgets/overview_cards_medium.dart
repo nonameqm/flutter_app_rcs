@@ -11,7 +11,7 @@ class OverviewCardsMediumScreen extends StatelessWidget {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Row(
         children: [
-          InfoCard(
+          OverviewInfoCard(
             title: "Rides in Progress",
             value: "7",
             onTap: () {},
@@ -20,7 +20,7 @@ class OverviewCardsMediumScreen extends StatelessWidget {
           SizedBox(
             width: _width / 64,
           ),
-          InfoCard(
+          OverviewInfoCard(
             title: "Packages delivered",
             value: "17",
             onTap: () {},
@@ -33,7 +33,7 @@ class OverviewCardsMediumScreen extends StatelessWidget {
       ),
       Row(
         children: [
-          InfoCard(
+          OverviewInfoCard(
             title: "Cancelled Delivery",
             value: "3",
             onTap: () {},
@@ -42,7 +42,7 @@ class OverviewCardsMediumScreen extends StatelessWidget {
           SizedBox(
             width: _width / 64,
           ),
-          InfoCard(
+          OverviewInfoCard(
             title: "Scheduled Delivery",
             value: "24",
             onTap: () {},

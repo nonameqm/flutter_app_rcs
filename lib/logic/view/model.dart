@@ -1,4 +1,54 @@
 // ignore_for_file: non_constant_identifier_names
+class FactoryOverview {
+  int success;
+  int total_test;
+
+  FactoryOverview({this.success, this.total_test});
+
+  factory FactoryOverview.fromJson(Map<String, dynamic> json) =>
+      FactoryOverview(success: json["success"], total_test: json["total_test"]);
+}
+
+class Overview {
+  int total_user;
+  int total_factory;
+  int total_robot;
+  int total_test;
+  int total_success;
+
+  Overview(
+      {this.total_factory,
+      this.total_robot,
+      this.total_success,
+      this.total_test,
+      this.total_user});
+
+  factory Overview.fromJson(Map<String, dynamic> json) => Overview(
+      total_factory: json["total_factory"],
+      total_robot: json["total_robot"],
+      total_success: json["total_success"],
+      total_test: json["total_test"],
+      total_user: json["total_user"]);
+}
+
+class Company {
+  String name;
+  Company({this.name});
+
+  factory Company.fromJson(Map<String, dynamic> json) =>
+      Company(name: json["name"]);
+}
+
+class CompanyList {
+  List<Company> companyList;
+  CompanyList({this.companyList});
+
+  factory CompanyList.fromJson(List<dynamic> json) {
+    List<Company> companylist =
+        json.map((item) => Company.fromJson(item)).toList();
+    return CompanyList(companyList: companylist);
+  }
+}
 
 class AuthInfo {
   String token;

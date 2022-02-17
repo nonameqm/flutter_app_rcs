@@ -30,7 +30,8 @@ class _CommandDialog extends State<CommandDialog> {
     "manual_start",
     "get_pos",
     "confirm_method",
-    "set_method"
+    "set_method",
+    "get_method",
   ];
   String _selected_method;
   @override
@@ -104,6 +105,17 @@ class _CommandDialog extends State<CommandDialog> {
                       )
                     ])
                   else if (widget.method_name == "confirm_method")
+                    Column(children: [
+                      TextField(
+                        controller: controller,
+                        decoration: InputDecoration(
+                          labelText: "Input Method name",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                      )
+                    ])
+                  else if (widget.method_name == "get_method")
                     Column(children: [
                       TextField(
                         controller: controller,

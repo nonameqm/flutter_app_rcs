@@ -1,16 +1,23 @@
 // ignore_for_file: sized_box_for_whitespace
 
+import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_rcs/constants/style.dart';
+import 'package:flutter_app_rcs/logic/view/model.dart';
 import 'package:flutter_app_rcs/pages/overview/widgets/bar_chart.dart';
+import 'package:flutter_app_rcs/pages/overview/widgets/pie_chart.dart';
 import 'package:flutter_app_rcs/pages/overview/widgets/test_info.dart';
 import 'package:flutter_app_rcs/widgets/custom_text.dart';
 
 class TestSectionLarge extends StatelessWidget {
-  const TestSectionLarge({Key key}) : super(key: key);
+  final Overview overview;
+  const TestSectionLarge({Key key, this.overview}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    int total_test = overview.total_test;
+    int pass = overview.total_success;
+    int defect = total_test - pass;
     return Container(
       padding: const EdgeInsets.all(24),
       margin: const EdgeInsets.symmetric(vertical: 30),
@@ -37,11 +44,16 @@ class TestSectionLarge extends StatelessWidget {
                 weight: FontWeight.bold,
                 color: lightGrey,
               ),
-              Container(
-                width: 600,
-                height: 200,
-                child: SimpleBarChart.withSampleData(),
-              )
+              if (pass != 0 && defect != 0)
+                Container(
+                    width: 600,
+                    height: 200,
+                    child: ResultPieChart.withGivenData([pass, defect]))
+              else
+                Container(
+                    width: 600,
+                    height: 200,
+                    child: ResultPieChart.withSampleData())
             ],
           ),
         ),
@@ -55,14 +67,10 @@ class TestSectionLarge extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Row(
-                children: const [
+                children: [
                   TestInfo(
-                    title: "Today\'s Defection",
-                    amount: "230",
-                  ),
-                  TestInfo(
-                    title: "Last 1 day",
-                    amount: "1,100",
+                    title: "Total Test",
+                    amount: total_test.toString(),
                   ),
                 ],
               ),
@@ -70,14 +78,14 @@ class TestSectionLarge extends StatelessWidget {
                 height: 30,
               ),
               Row(
-                children: const [
+                children: [
                   TestInfo(
-                    title: "Last 1 week",
-                    amount: "3,230",
+                    title: "Total Pass",
+                    amount: pass.toString(),
                   ),
                   TestInfo(
-                    title: "Last 1 month",
-                    amount: "11,300",
+                    title: "Total Defection",
+                    amount: defect.toString(),
                   ),
                 ],
               ),

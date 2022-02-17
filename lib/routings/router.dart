@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_rcs/pages/authentication/authentication.dart';
 import 'package:flutter_app_rcs/pages/factory/factory.dart';
+import 'package:flutter_app_rcs/pages/factory_detail/factory_detail.dart';
 import 'package:flutter_app_rcs/pages/method/methods.dart';
 import 'package:flutter_app_rcs/pages/overview/overview.dart';
 import 'package:flutter_app_rcs/pages/robot_deatil/robot_detail.dart';
@@ -21,6 +22,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       ));
     case MethodPageRoute:
       return _getPageRoute(MethodPage());
+
+    case FactoryDetailPageRoute:
+      return _getPageRoute(FactoryDetailPage(argument: settings.arguments));
 
     case RobotDetailPageRoute:
       return _getPageRoute(RobotDetailPage(

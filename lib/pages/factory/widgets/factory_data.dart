@@ -2,9 +2,11 @@
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_rcs/constants/controllers.dart';
 import 'package:flutter_app_rcs/constants/style.dart';
 import 'package:flutter_app_rcs/logic/function/item.dart';
 import 'package:flutter_app_rcs/logic/view/model.dart';
+import 'package:flutter_app_rcs/routings/routes.dart';
 import 'package:flutter_app_rcs/widgets/custom_dialog.dart';
 import 'package:flutter_app_rcs/widgets/custom_text.dart';
 import 'package:get/get.dart';
@@ -90,8 +92,12 @@ class FactoryData extends StatelessWidget {
                       (index) => DataRow(
                         cells: [
                           DataCell(
-                            CustomText(text: data.factoryList[index].name),
-                          ),
+                              CustomText(text: data.factoryList[index].name),
+                              onTap: () {
+                            navigationController.navigateTo(
+                                FactoryDetailPageRoute,
+                                {'factory_name': data.factoryList[index].name});
+                          }),
                           DataCell(CustomText(
                             text:
                                 data.factoryList[index].loc ?? 'Not Specified',

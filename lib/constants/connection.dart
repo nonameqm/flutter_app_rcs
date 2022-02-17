@@ -12,6 +12,7 @@ const List<String> method_type = [
   "manual_stop",
   "plan_save",
   "manual_end",
+  "get_method",
   "confirm_method",
   "set_method",
   "exec_method",

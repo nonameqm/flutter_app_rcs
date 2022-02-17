@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_rcs/constants/style.dart';
 import 'package:flutter_app_rcs/logic/function/auth.dart';
+import 'package:flutter_app_rcs/logic/function/item.dart';
 import 'package:flutter_app_rcs/pages/authentication/authentication.dart';
 import 'package:flutter_app_rcs/routings/routes.dart';
 import 'package:flutter_app_rcs/widgets/custom_dialog.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_app_rcs/widgets/custom_text.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import '../../logic/view/model.dart';
 
 class EnrollPage extends StatefulWidget {
   const EnrollPage({Key key}) : super(key: key);
@@ -28,14 +30,16 @@ class _EnrollPage extends State<EnrollPage> {
 
   final _company_list = ['AICO', 'SKKU'];
   final _usertype_list = ['User', 'Developer'];
-  String _selected_company = 'AICO';
-  String _selected_usertype = 'User';
   final emailController = TextEditingController();
   final pwController = TextEditingController();
   final phoneController = TextEditingController();
+  String _selected_company = 'AICO';
+  String _selected_usertype = 'User';
 
   @override
   Widget build(BuildContext context) {
+    Future<CompanyList> company_list = getCompanyList();
+
     return Scaffold(
       body: Center(
         child: Container(
@@ -116,21 +120,49 @@ class _EnrollPage extends State<EnrollPage> {
                 SizedBox(
                   width: 40,
                 ),
-                Expanded(
-                  child: DropdownButton(
-                    borderRadius: BorderRadius.circular(20),
-                    value: _selected_company,
-                    items: _company_list.map((value) {
-                      return DropdownMenuItem(value: value, child: Text(value));
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selected_company = value;
-                      });
-                    },
-                    style: GoogleFonts.roboto(fontSize: 20),
-                  ),
-                ),
+
+                FutureBuilder(
+                    future: company_list,
+                    builder: ((context, snapshot) {
+                      if (snapshot.hasData) {
+                        CompanyList data = snapshot.data;
+                        return Expanded(
+                          child: DropdownButton(
+                            borderRadius: BorderRadius.circular(20),
+                            value: _selected_company,
+                            items: data.companyList.map((Company value) {
+                              return DropdownMenuItem(
+                                  value: value.name, child: Text(value.name));
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selected_company = value;
+                              });
+                            },
+                            style: GoogleFonts.roboto(fontSize: 20),
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    }))
+                // Expanded(
+                //   child: DropdownButton(
+                //     borderRadius: BorderRadius.circular(20),
+                //     value: _selected_company,
+                //     items: _company_list.map((value) {
+                //       return DropdownMenuItem(value: value, child: Text(value));
+                //     }).toList(),
+                //     onChanged: (value) {
+                //       setState(() {
+                //         _selected_company = value;
+                //       });
+                //     },
+                //     style: GoogleFonts.roboto(fontSize: 20),
+                //   ),
+                // ),
               ])),
               SizedBox(
                 height: 15,

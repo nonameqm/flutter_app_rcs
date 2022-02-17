@@ -1,7 +1,4 @@
 // ignore_for_file: prefer_const_constructors
-
-import 'dart:convert';
-
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_rcs/constants/controllers.dart';
@@ -9,43 +6,16 @@ import 'package:flutter_app_rcs/constants/style.dart';
 import 'package:flutter_app_rcs/controllers/navigation_controller.dart';
 import 'package:flutter_app_rcs/logic/function/item.dart';
 import 'package:flutter_app_rcs/logic/view/model.dart';
-import 'package:flutter_app_rcs/pages/robot_deatil/robot_detail.dart';
 import 'package:flutter_app_rcs/routings/routes.dart';
-import 'package:flutter_app_rcs/widgets/custom_dialog.dart';
 import 'package:flutter_app_rcs/widgets/custom_text.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as http;
 
-class RobotListData extends StatelessWidget {
-  const RobotListData({Key key}) : super(key: key);
+class RobotDataFactory extends StatelessWidget {
+  final String factory_name;
+  const RobotDataFactory({Key key, this.factory_name}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Future<http.Response> robottype_data = http_getRobotType();
-    Future<http.Response> factory_data =
-        http_getFactoryList(GetStorage('session').read('company'));
-    RobotTypeList robottype_list;
-    String _selected_robottype;
-    FactoryList factory_list;
-    String _selected_factory;
-
-    robottype_data.then((val) {
-      if (val.statusCode == 200) {
-        robottype_list = RobotTypeList.fromJson(json.decode(val.body));
-        _selected_robottype = robottype_list.robottypeList[0].type;
-      }
-    });
-
-    factory_data.then((val) {
-      if (val.statusCode == 200) {
-        factory_list = FactoryList.fromJson(json.decode(val.body));
-        _selected_factory = factory_list.factoryList[0].name;
-      }
-    });
-
-    var company = GetStorage('session').read('company');
-    Future<RobotList> robotlist = getRobotList('company', company);
+    Future<RobotList> robotlist = getRobotList('factory', factory_name);
 
     return Container(
         padding: const EdgeInsets.all(16),
@@ -74,37 +44,6 @@ class RobotListData extends StatelessWidget {
                   weight: FontWeight.bold,
                 ),
                 const SizedBox(width: 10),
-                SizedBox(
-                  width: 25,
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        FloatingActionButton(
-                            onPressed: () {
-                              Get.dialog(RobotRegisterDialog(
-                                factory_list: factory_list.factoryList,
-                                // robottype_list: robottype_list.robottypeList,
-                                noTap: false,
-                                input_list: const [
-                                  'Factory',
-                                  'Robot Type',
-                                  'Serial',
-                                  'Ip',
-                                ],
-                                message: 'Please input following info.',
-                              ));
-                            },
-                            backgroundColor: Colors.grey,
-                            child: const Icon(
-                              Icons.add_rounded,
-                              size: 20,
-                            ))
-                      ],
-                    ),
-                  ),
-                )
               ],
             ),
             FutureBuilder<RobotList>(

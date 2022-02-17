@@ -18,6 +18,12 @@
         {
             "name": "web",
             "request": "launch",
+            "type": "dart", 
+            "args": ["-d", "web"] 
+        },
+        {
+            "name": "chrome",
+            "request": "launch",
             "type": "dart",
             "args": ["-d", "chrome"]
         }

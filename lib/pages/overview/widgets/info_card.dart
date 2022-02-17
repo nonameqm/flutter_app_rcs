@@ -1,15 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_rcs/constants/style.dart';
 
-class InfoCard extends StatelessWidget {
+class OverviewInfoCard extends StatelessWidget {
   final String title;
   final String value;
   final Color topColor;
   final bool isActive;
   final Function onTap;
 
-  const InfoCard(
+  const OverviewInfoCard(
       {Key key,
       this.title,
       this.value,

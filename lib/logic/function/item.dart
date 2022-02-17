@@ -4,6 +4,44 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_app_rcs/logic/view/model.dart';
 import 'package:flutter_app_rcs/constants/connection.dart';
 
+Future<FactoryOverview> getFactoryOverView(String factory_name) async {
+  String urlData;
+  urlData = api_server_ip + 'item/factory_overview/' + factory_name;
+  final url = Uri.parse(urlData);
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    return FactoryOverview.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<Overview> getOverviewData(String company_name) async {
+  String urlData;
+  urlData = api_server_ip + 'item/overview/' + company_name;
+  final url = Uri.parse(urlData);
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    return Overview.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
+Future<CompanyList> getCompanyList() async {
+  String urlData = api_server_ip + 'item/company/';
+  final url = Uri.parse(urlData);
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    return CompanyList.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Failed to load data');
+  }
+}
+
 Future<RobotList> getRobotList(String type, String name) async {
   String urlData;
   if (type == 'company') {
@@ -104,5 +142,21 @@ Future<http.Response> http_getMethodList(String name) async {
   final url = Uri.parse(urlData);
   final response = await http.get(url);
 
+  return response;
+}
+
+Future<http.Response> http_getCompanyList() async {
+  String urlData = api_server_ip + 'item/company/';
+  final url = Uri.parse(urlData);
+  final response = await http.get(url);
+
+  return response;
+}
+
+Future<http.Response> http_getOverviewData(String company_name) async {
+  String urlData;
+  urlData = api_server_ip + 'item/overview/' + company_name;
+  final url = Uri.parse(urlData);
+  final response = await http.get(url);
   return response;
 }

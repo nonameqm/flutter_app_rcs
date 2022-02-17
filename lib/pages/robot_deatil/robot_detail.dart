@@ -38,6 +38,10 @@ class RobotDetailPage extends StatelessWidget {
         child: ListView(
           children: [
             RobotDetailHead(),
+            const CustomText(
+              text: "Robot Status",
+              size: 20,
+            ),
             if (ResponsiveWidget.isLargeScreen(context))
               OverviewCardsLargeScreen(
                 argument: argument,
@@ -50,6 +54,10 @@ class RobotDetailPage extends StatelessWidget {
               OverviewCardsSmallScreen(
                 argument: argument,
               ),
+            Container(
+              margin: EdgeInsets.only(
+                  top: ResponsiveWidget.isSmallScreen(context) ? 48 : 6),
+            ),
             const CustomText(
               text: "Robot Command List",
               size: 20,
@@ -57,12 +65,16 @@ class RobotDetailPage extends StatelessWidget {
             CommandButtonList(
               serial: argument["serial"],
             ),
-            if (!ResponsiveWidget.isSmallScreen(context))
-              RobotTestSectionLarge(
-                serial: argument["serial"],
-              )
-            else
-              const TestSectionSmall(),
+            const CustomText(
+              text: "Robot Test Result",
+              size: 20,
+            ),
+            // if (!ResponsiveWidget.isSmallScreen(context))
+            //   RobotTestSectionLarge(
+            //     serial: argument["serial"],
+            //   )
+            // else
+            //   const TestSectionSmall(),
           ],
         ),
       )

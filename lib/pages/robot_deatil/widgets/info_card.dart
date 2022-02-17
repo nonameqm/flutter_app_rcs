@@ -34,6 +34,7 @@ class _RobotInfoCardState extends State<RobotInfoCard> {
   StreamController _streamController = StreamController();
   Timer _timer;
   var data;
+
   Future getRealData() async {
     String urlData;
     urlData = api_server_ip + 'item/realdata/';
@@ -46,20 +47,68 @@ class _RobotInfoCardState extends State<RobotInfoCard> {
     http.Response response =
         await http.post(url, headers: request_headers, body: json.encode(data));
 
-    String jsonsDataString = response.body
-        .toString(); // toString of Response's body is assigned to jsonDataString
-    data = json.decode(jsonsDataString);
-    //Add your data to stream
-    _streamController.add(data[widget.type][0]['robot_current1'] ??
-        data[widget.type][0]['robot_voltage1']);
+    if (response.statusCode == 200) {
+      String jsonsDataString = response.body
+          .toString(); // toString of Response's body is assigned to jsonDataString
+      data = json.decode(jsonsDataString);
+      //Add your data to stream
+      _streamController.add(data[widget.type][0]['robot_current1'] ??
+          data[widget.type][0]['robot_voltage1']);
+    }
+  }
+
+  Future getStatus() async {
+    String urlData;
+    urlData = api_server_ip + 'item/status_code/' + widget.serial;
+    final url = Uri.parse(urlData);
+    http.Response response = await http.get(url, headers: request_headers);
+    if (response.statusCode == 200) {
+      String jsonsDataString = response.body
+          .toString(); // toString of Response's body is assigned to jsonDataString
+      data = json.decode(jsonsDataString);
+      //Add your data to stream
+      if (data == 1) {
+        _streamController.add('Operating');
+      } else if (data == 2) {
+        _streamController.add('Waiting');
+      } else if (data == 3) {
+        _streamController.add('Pause');
+      } else {
+        _streamController.add('Off');
+      }
+    }
+  }
+
+  Future getErrorCode() async {
+    String urlData;
+    urlData = api_server_ip + 'item/error_code/' + widget.serial;
+    final url = Uri.parse(urlData);
+    http.Response response = await http.get(url, headers: request_headers);
+    if (response.statusCode == 200) {
+      String jsonsDataString = response.body
+          .toString(); // toString of Response's body is assigned to jsonDataString
+      data = json.decode(jsonsDataString);
+      //Add your data to stream
+      _streamController.add(data);
+    }
   }
 
   @override
   void initState() {
-    getRealData();
-    _timer =
-        Timer.periodic(const Duration(seconds: 5), (timer) => getRealData());
-    super.initState();
+    if (widget.type == 'status') {
+      getStatus();
+      _timer =
+          Timer.periodic(const Duration(seconds: 5), (timer) => getStatus());
+    } else if (widget.type == 'error') {
+      getErrorCode();
+      _timer =
+          Timer.periodic(const Duration(seconds: 5), (timer) => getErrorCode());
+    } else {
+      getRealData();
+      _timer =
+          Timer.periodic(const Duration(seconds: 2), (timer) => getRealData());
+      super.initState();
+    }
   }
 
   @override
@@ -114,7 +163,7 @@ class _RobotInfoCardState extends State<RobotInfoCard> {
                       TextSpan(
                           text: "${snapshot.data.toString()}\n",
                           style: TextStyle(
-                              fontSize: 40,
+                              fontSize: 32,
                               color: widget.isActive ? active : dark))
                     ]),
                   )
@@ -125,7 +174,52 @@ class _RobotInfoCardState extends State<RobotInfoCard> {
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         } else {
-          return const CircularProgressIndicator();
+          return Expanded(
+            child: InkWell(
+              onTap: widget.onTap,
+              child: Container(
+                height: 136,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        offset: const Offset(0, 6),
+                        color: lightGrey.withOpacity(.1),
+                        blurRadius: 12)
+                  ],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          color: widget.topColor ?? active,
+                          height: 5,
+                        ),
+                      )
+                    ],
+                  ),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(children: [
+                      TextSpan(
+                          text: "${widget.title}\n",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: widget.isActive ? active : lightGrey)),
+                      TextSpan(
+                          text: "Data is not set or the connection is unstable",
+                          style: TextStyle(
+                              fontSize: 24,
+                              color: widget.isActive ? active : dark))
+                    ]),
+                  )
+                ]),
+              ),
+            ),
+          );
         }
       },
     );

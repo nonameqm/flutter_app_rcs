@@ -10,12 +10,17 @@ import 'package:flutter_app_rcs/pages/overview/widgets/test_section_large.dart';
 import 'package:flutter_app_rcs/pages/overview/widgets/test_section_small.dart';
 import 'package:flutter_app_rcs/widgets/custom_text.dart';
 import 'package:get/get.dart';
+import 'package:flutter_app_rcs/logic/function/item.dart';
+import 'package:flutter_app_rcs/logic/view/model.dart';
+import 'package:get_storage/get_storage.dart';
 
 class OverViewPage extends StatelessWidget {
   const OverViewPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Future<Overview> overview =
+        getOverviewData(GetStorage('session').read('company'));
     return Column(children: [
       Obx(() => Row(
             children: [
@@ -30,22 +35,27 @@ class OverViewPage extends StatelessWidget {
               ),
             ],
           )),
-      Expanded(
-        child: ListView(
-          children: [
-            if (ResponsiveWidget.isLargeScreen(context))
-              OverviewCardsLargeScreen()
-            else if (ResponsiveWidget.isMediumScreen(context))
-              OverviewCardsMediumScreen()
-            else
-              OverviewCardsSmallScreen(),
-            if (!ResponsiveWidget.isSmallScreen(context))
-              const TestSectionLarge()
-            else
-              const TestSectionSmall(),
-          ],
-        ),
-      )
+      FutureBuilder(
+          future: overview,
+          builder: (context, snapshot) {
+            Overview _overview = snapshot.data;
+            return Expanded(
+              child: ListView(
+                children: [
+                  if (ResponsiveWidget.isLargeScreen(context))
+                    OverviewCardsLargeScreen(overview: _overview)
+                  else if (ResponsiveWidget.isMediumScreen(context))
+                    OverviewCardsMediumScreen()
+                  else
+                    OverviewCardsSmallScreen(),
+                  if (!ResponsiveWidget.isSmallScreen(context))
+                    TestSectionLarge(overview: _overview)
+                  else
+                    const TestSectionSmall(),
+                ],
+              ),
+            );
+          })
     ]);
   }
 }

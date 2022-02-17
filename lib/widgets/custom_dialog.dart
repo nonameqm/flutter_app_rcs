@@ -154,14 +154,14 @@ class RobotRegisterDialog extends StatelessWidget {
   final List<String> input_list;
   final bool noTap;
   final String message;
-  final List<RobotType> robottype_list;
+  // final List<RobotType> robottype_list;
   final List<Factory> factory_list;
   const RobotRegisterDialog(
       {Key key,
       this.input_list,
       this.noTap,
       this.message,
-      this.robottype_list,
+      // this.robottype_list,
       this.factory_list})
       : super(key: key);
 
@@ -170,7 +170,7 @@ class RobotRegisterDialog extends StatelessWidget {
     List<TextEditingController> _controllers = List();
 
     String _selected_factory = factory_list[0].name;
-    String _selected_robottype = robottype_list[0].type;
+    // String _selected_robottype = robottype_list[0].type;
 
     return SimpleDialog(
       title: CustomText(
