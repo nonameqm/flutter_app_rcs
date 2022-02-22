@@ -10,6 +10,7 @@ import 'package:flutter_app_rcs/logic/view/model.dart';
 import 'package:flutter_app_rcs/routings/routes.dart';
 import 'package:flutter_app_rcs/widgets/custom_text.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class CommandDialog extends StatefulWidget {
@@ -158,7 +159,9 @@ class _CommandDialog extends State<CommandDialog> {
                                   if (widget.method_name != 'set_method') {
                                     command_data = {
                                       "robot_serial": widget.robot_serial,
-                                      "robot_param": controller.text
+                                      "robot_param": controller.text,
+                                      "email":
+                                          GetStorage('session').read('email')
                                     };
                                   } else {
                                     command_data = {

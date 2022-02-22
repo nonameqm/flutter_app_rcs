@@ -255,6 +255,48 @@ class RobotRegisterDialog extends StatelessWidget {
                         },
                       text: "Confirm     ",
                       style: TextStyle(color: active, fontSize: 14)),
+                  TextSpan(
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          if (_controllers[3].text == '' ||
+                              _controllers[3].text == null) {
+                            Get.snackbar(
+                                "IP is needed", "Indicate specific IP");
+                          }
+                          Future<http.Response> httpResponse =
+                              http_getRobotfromIP(_controllers[3].text);
+                          httpResponse.then((val) {
+                            if (val.statusCode == 200) {
+                              _controllers[2].text = val.body;
+                            } else {
+                              Get.snackbar("Connection is not set",
+                                  json.decode(val.body)['msg'].toString(),
+                                  snackPosition: SnackPosition.TOP,
+                                  isDismissible: true);
+                            }
+                          }).catchError((error) {
+                            print('error: ' + error.toString());
+                          });
+                          // Future<http.Response> httpResponse =
+                          //     register_robot(new_robot_data);
+                          // httpResponse.then((val) {
+                          //   if (val.statusCode == 200) {
+                          //     Get.offAllNamed(RobotPageRoute);
+                          //   } else {
+                          //     Get.snackbar(
+                          //       "Register failed",
+                          //       json.decode(val.body)['msg'].toString(),
+                          //       snackPosition: SnackPosition.TOP,
+                          //       isDismissible: true,
+                          //     );
+                          //     _controllers.map((val) => val.text = '');
+                          //   }
+                          // }).catchError((error) {
+                          //   print('error: ' + error.toString());
+                          // });
+                        },
+                      text: "Get Info with IP     ",
+                      style: TextStyle(color: active, fontSize: 14)),
                   if (noTap)
                     TextSpan(
                         recognizer: TapGestureRecognizer()

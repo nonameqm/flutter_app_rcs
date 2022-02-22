@@ -160,3 +160,11 @@ Future<http.Response> http_getOverviewData(String company_name) async {
   final response = await http.get(url);
   return response;
 }
+
+Future<http.Response> http_getRobotfromIP(String ip) async {
+  String urlData;
+  urlData = api_server_ip + 'robot/get_from_ip/' + ip;
+  final url = Uri.parse(urlData);
+  final response = await http.get(url);
+  return response;
+}

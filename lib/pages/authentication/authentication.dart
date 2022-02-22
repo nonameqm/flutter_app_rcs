@@ -22,7 +22,7 @@ class AuthenticationPage extends StatelessWidget {
     GetStorage().remove('company');
     GetStorage().remove('user_type');
     GetStorage().remove('token');
-
+    GetStorage().remove('email');
     final emailController = TextEditingController();
     final pwController = TextEditingController();
     return Scaffold(
@@ -162,6 +162,7 @@ void isLoginPermit(TextEditingController email, TextEditingController pw) {
       GetStorage('session').write('company', companyName);
       GetStorage('session').write('user_type', userType);
       GetStorage('session').write('token', authToken);
+      GetStorage('session').write('email', email.text);
       Get.offAllNamed(RootRoute);
     } else {
       Get.snackbar(
